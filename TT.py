@@ -57,9 +57,9 @@ class UTIL:
 
 # General info class
 class INFO:
-    VERSION     = "d0"
-    SUBVERSION  = "89"
-    BUILD       = "005"
+    VERSION     = "c1"
+    SUBVERSION  = "0e"
+    BUILD       = "107"
     LICENSE     = "GPL 3.0"
     AUTHOR      = "PsychicPenguin"
     NAME        = "Timeless Tom"
@@ -361,10 +361,6 @@ def Help(): # Print list of available command and what they do
     Body("continue   \t(continue logging)",indent=True)
     Body("stop       \t(stop     logging)",indent=True)
 
-    print("")
-    Body("rm / remove\t(delete log file)", indent=True)
-    Body("bk / backup\t(create a backup of the logfile)", indent=True)
-
 def Confusion(): # If user types invalid command, help them in their confusion
     Log(LVL.WARNING, "Invalid command")
     Body("'" + INFO.CMD + "'" + " is not a valid command.")
@@ -548,8 +544,6 @@ def Init():
         # Check if program was closed properly
         ClosedProperly()
         sleep(0.5)
-
-    TIME.START = "Logging started: " + GetDate() + " " + GetTime()
 
     # Write new entry if file was closed propery (or error was ignored)
     if INFO.STATUS == "...":
