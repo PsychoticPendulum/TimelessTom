@@ -5,6 +5,7 @@
 
 import os
 import sys
+import traceback
 from time import sleep
 from datetime import datetime
 
@@ -56,9 +57,9 @@ class UTIL:
 
 # General info class
 class INFO:
-    VERSION     = "99"
-    SUBVERSION  = "f6"
-    BUILD       = "20e"
+    VERSION     = "bb"
+    SUBVERSION  = "44"
+    BUILD       = "199"
     LICENSE     = "GPL 3.0"
     AUTHOR      = "PsychicPenguin"
     NAME        = "Timeless Tom"
@@ -153,6 +154,23 @@ def Exit(clean): # Close the program down
     print(UTIL.CLEAR + UTIL.TOP, end="")
     quit()
 
+def RemoveFile(backup=False):
+    # Check if file even exists. This should never really return true though
+    if not os.path.exists("tt.csv"):
+        Log(LVL.ERROR, "File could not be found ...")
+        return
+    # If backup mode, just rename the file
+    if backup:
+        os.rename("tt.csv", "tt.csv.bak")
+        return
+    # Otherwise actually delete the file
+    else:
+        Log(LVL.WARNING, "You are about to delete your logfile. This might be a bad idea yo ...")
+        # Make REALLY sure user wants to do that
+        if Doublecheck():
+            os.remove("tt.csv")
+            return
+
 def Write(txt, time=True): # Writes to 'tt.csv' file
     # Open the file
     file = open("tt.csv", "a")
@@ -167,7 +185,7 @@ def Write(txt, time=True): # Writes to 'tt.csv' file
         if (txt == "PAUSE" or txt == "STOP"):
             file.write("," + GetDuration(TIME.START, TIME.STOP))
 
-    # Finally write to file
+        # Finally write to file
     file.write("\n")
     # And close the file down cleanly
     file.close()
@@ -184,7 +202,7 @@ def ClosedProperly(): # Checks if last time the program ran, it was stopped befo
     parts = last_line.split(",")
 
     # Check if last line starts with 'STOP' or 'LOGON', then the program was closed down properly
-    if parts[0] == "STOP" or parts[0] == "LOGON":
+    if parts[0] == "STOP" or parts[0] == "LOGON" or parts[0] == "WHAT":
         Log(LVL.INFO, "File looks okay :)")
         return
    
@@ -330,16 +348,22 @@ def License(): # License prints the contents of LICENSE
 def Help(): # Print list of available command and what they do
     Header("List of available commands")
     Body("help / wtf \t(display this menu)",indent=True)
-    Body("usage      \t(the long version of the help menu)",indent=True)
-    Body("licence    \t(display the full license)",indent=True)
     Body("exit / :wq \t(exit out of this program)",indent=True)
     Body("clear / cls\t(clear the screen)",indent=True)
 
+    print("")
+    Body("usage      \t(the long version of the help menu)",indent=True)
+    Body("licence    \t(display the full license)",indent=True)
+ 
     print("")
     Body("start      \t(start    logging)",indent=True)
     Body("pause      \t(pause    logging)",indent=True)
     Body("continue   \t(continue logging)",indent=True)
     Body("stop       \t(stop     logging)",indent=True)
+
+    print("")
+    Body("rm / remove\t(delete log file)", indent=True)
+    Body("bk / backup\t(create a backup of the logfile)", indent=True)
 
 def Confusion(): # If user types invalid command, help them in their confusion
     Log(LVL.WARNING, "Invalid command")
@@ -464,6 +488,11 @@ def Prompt():
                 Clear()
             elif INFO.CMD == "":
                 print("", end="")
+            # Handle files
+            elif INFO.CMD == "rm" or INFO.CMD == "remove":
+                RemoveFile()
+            elif INFO.CMD == "bak" or INFO.CMD == "backup":
+                RemoveFile(backup=True)
             # Logging Commands
             elif INFO.CMD == "start":
                 Start()
@@ -480,6 +509,14 @@ def Prompt():
                 Confusion()
     except KeyboardInterrupt:
         Exit(False)
+    except Exception as e:
+        print("\n\n\n")
+        Log(LVL.ERROR, "Something went wrong. The program is crashing ...")
+        print(str(e))
+        traceback.print_exc()
+        print("\n")
+        Log(LVL.ERROR, "Please send this to your administrator!")
+
 
 #   --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 #   Starting point
