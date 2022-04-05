@@ -57,9 +57,9 @@ class UTIL:
 
 # General info class
 class INFO:
-    VERSION     = "bb"
-    SUBVERSION  = "44"
-    BUILD       = "199"
+    VERSION     = "d0"
+    SUBVERSION  = "89"
+    BUILD       = "005"
     LICENSE     = "GPL 3.0"
     AUTHOR      = "PsychicPenguin"
     NAME        = "Timeless Tom"
@@ -246,7 +246,7 @@ def SetStatus():
 
 def ClearStatus():
     # Move cursor down, clear line, move cursor back up, clear line again
-    print(UTIL.CLEARLINE + UTIL.UP + UTIL.CLEARLINE, end="")
+    print(UTIL.CLEARLINE, end="")
 
 #   --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 #   Making the UI pretty
