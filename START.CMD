@@ -4,3 +4,4 @@
 @echo off
 title TimelessTom
 python3 TT.py
+pause
